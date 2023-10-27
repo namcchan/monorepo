@@ -1,19 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
+import { SharedModule } from './shared/shared.module';
+import { DatabaseModule } from './database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppConfigService } from './shared/service/app-config.service';
+import { HealthCheckModule } from './modules/health-check/health-check.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: true,
-      playground: false,
-      sortSchema: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
+    SharedModule,
+    DatabaseModule,
+    HealthCheckModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
